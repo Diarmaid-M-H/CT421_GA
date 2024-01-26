@@ -9,9 +9,13 @@ def generate_random_solution(length):
 
 
 def evaluate_fitness(solution):
-    # fitness is the number of 1s present
-    return solution.count('1')
-
+    # fitness is 2* solution length if there are no 1s present,
+    # otherwise fitness is the number of 1s present
+    if solution.count('1') == 0:
+        # 1/2 ^ solution length chance of a string of all 0s being generated
+        return (len(solution)) * 2
+    else:
+        return solution.count('1')
 
 
 def mutate(solution, mutation_rate):
@@ -42,6 +46,7 @@ def calculate_average_fitness(population):
     # averages the fitness of all solutions
     total_fitness = sum(evaluate_fitness(solution) for solution in population)
     return total_fitness / len(population)
+
 
 def elitism(population, elitism_percentage):
     population_size = len(population)
@@ -91,7 +96,8 @@ if __name__ == "__main__":
     generations = 20
     elite_percentage = 0.01
 
-    avg_fitness_history = genetic_algorithm(population_size, solution_length, mutation_rate, generations, elite_percentage)
+    avg_fitness_history = genetic_algorithm(population_size, solution_length, mutation_rate, generations,
+                                            elite_percentage)
 
     # Plotting
     plt.plot(avg_fitness_history)
