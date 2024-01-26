@@ -9,9 +9,12 @@ def generate_random_solution(length):
 
 
 def evaluate_fitness(solution):
-    # fitness is the number of 1s present
-    return solution.count('1')
+    # fitness is measured by the distance between the target string and the solution (small value = more fit)
+    if len(solution) != len(target_solution):
+        raise ValueError("Strings being compared must be of equal length")
 
+    # fitness is higher at a lower hamming distance (when the solutions are more similar)
+    return len(solution) - (sum(bit1 != bit2 for bit1, bit2 in zip(solution, target_solution)))
 
 
 def mutate(solution, mutation_rate):
@@ -43,6 +46,7 @@ def calculate_average_fitness(population):
     total_fitness = sum(evaluate_fitness(solution) for solution in population)
     return total_fitness / len(population)
 
+
 def elitism(population, elitism_percentage):
     population_size = len(population)
     elite_size = int(population_size * elitism_percentage)
@@ -53,7 +57,7 @@ def elitism(population, elitism_percentage):
     return elite
 
 
-def genetic_algorithm(population_size, solution_length, mutation_rate, generations, elite_percentage):
+def genetic_algorithm(population_size, solution_length, mutation_rate, generations, elite_percentage, target_solution):
     population = create_initial_population(population_size, solution_length)
     avg_fitness_history = []
 
@@ -90,8 +94,10 @@ if __name__ == "__main__":
     mutation_rate = 0.01
     generations = 20
     elite_percentage = 0.01
+    target_solution = "1000010010010000111100111100111001110100110011101100001110110110100001101111010110010110101011110011"
 
-    avg_fitness_history = genetic_algorithm(population_size, solution_length, mutation_rate, generations, elite_percentage)
+    avg_fitness_history = genetic_algorithm(population_size, solution_length, mutation_rate, generations,
+                                            elite_percentage, target_solution)
 
     # Plotting
     plt.plot(avg_fitness_history)
