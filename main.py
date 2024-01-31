@@ -83,19 +83,56 @@ def genetic_algorithm(population_size, solution_length, mutation_rate, generatio
 
     return avg_fitness_history
 
+class Bin:
+    def __init__(self, name, num_item_weights, bin_capacity, items):
+        self.name = name
+        self.num_item_weights = num_item_weights
+        self.bin_capacity = bin_capacity
+        self.items = items
+
+
+def parse_file(file_path):
+    problems = []
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+
+    current_problem = None
+    for line in lines:
+        line = line.strip()
+        if line.startswith('\'BPP'):
+            if current_problem:
+                problems.append(current_problem)
+            current_problem = Bin(name=line, num_item_weights=None, bin_capacity=None, items=[])
+        elif current_problem and current_problem.num_item_weights is None:
+            current_problem.num_item_weights = int(line)
+        elif current_problem and current_problem.bin_capacity is None:
+            current_problem.bin_capacity = int(line)
+        elif current_problem:
+            parts = line.split()
+            item = int(parts[0])
+            count = int(parts[1])
+            current_problem.items.extend([item] * count)
+
+    if current_problem:
+        problems.append(current_problem)
+
+    return problems
 
 if __name__ == "__main__":
-    population_size = 500
-    solution_length = 100
-    mutation_rate = 0.01
-    generations = 20
-    elite_percentage = 0.01
-
-    avg_fitness_history = genetic_algorithm(population_size, solution_length, mutation_rate, generations, elite_percentage)
-
-    # Plotting
-    plt.plot(avg_fitness_history)
-    plt.xlabel("Generations")
-    plt.ylabel("Average Fitness")
-    plt.title("Genetic Algorithm: One-Max Problem")
-    plt.show()
+    # population_size = 500
+    # solution_length = 100
+    # mutation_rate = 0.01
+    # generations = 20
+    # elite_percentage = 0.01
+    #
+    # avg_fitness_history = genetic_algorithm(population_size, solution_length, mutation_rate, generations, elite_percentage)
+    #
+    # # Plotting
+    # plt.plot(avg_fitness_history)
+    # plt.xlabel("Generations")
+    # plt.ylabel("Average Fitness")
+    # plt.title("Genetic Algorithm: One-Max Problem")
+    # plt.show()
+    # Example usage
+    file_path = 'Binpacking.txt'
+    problems = parse_file(file_path)
