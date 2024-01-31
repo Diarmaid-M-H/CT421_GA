@@ -103,5 +103,5 @@ if __name__ == "__main__":
     plt.plot(avg_fitness_history)
     plt.xlabel("Generations")
     plt.ylabel("Average Fitness")
-    plt.title("Genetic Algorithm: One-Max Problem")
+    plt.title("Genetic Algorithm: Deceptive Landscape")
     plt.show()
