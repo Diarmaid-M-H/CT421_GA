@@ -14,7 +14,7 @@ def evaluate_fitness(solution):
         raise ValueError("Strings being compared must be of equal length")
 
     # fitness is higher at a lower hamming distance (when the solutions are more similar)
-    return len(solution) - (sum(bit1 != bit2 for bit1, bit2 in zip(solution, target_solution)))
+    return sum(bit1 == bit2 for bit1, bit2 in zip(solution, target_solution))
 
 
 def mutate(solution, mutation_rate):
