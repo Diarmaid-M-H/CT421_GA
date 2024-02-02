@@ -155,23 +155,20 @@ def parse_file(file_path):
     return problems
 
 if __name__ == "__main__":
-    # population_size = 500
-    # solution_length = 100
-    # mutation_rate = 0.01
-    # generations = 20
-    # elite_percentage = 0.01
-    #
-    # avg_fitness_history = genetic_algorithm(population_size, solution_length, mutation_rate, generations, elite_percentage)
-    #
-    # # Plotting
-    # plt.plot(avg_fitness_history)
-    # plt.xlabel("Generations")
-    # plt.ylabel("Average Fitness")
-    # plt.title("Genetic Algorithm: One-Max Problem")
-    # plt.show()
-    # Example usage
+    population_size = 500
+    mutation_rate = 0.01
+    generations = 20
+    elite_percentage = 0.01
+
     file_path = 'Binpacking.txt'
     problems = parse_file(file_path)
     for problem in problems:
         global problem
+        avg_fitness_history = genetic_algorithm(population_size, mutation_rate, generations, elite_percentage)
 
+        # Plotting
+        plt.plot(avg_fitness_history)
+        plt.xlabel("Generations")
+        plt.ylabel("Average Fitness")
+        plt.title("Genetic Algorithm: One-Max Problem")
+        plt.show()
