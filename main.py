@@ -9,10 +9,14 @@ def generate_random_solution(length):
 
 
 def evaluate_fitness(solution):
-    # fitness is the number of 1s present
+    # Fitness of one chromosome which is a list
+    # Function will need access to the current item list to know if chromosome has bins
+    # TODO: needs to check if valid, assign bad fitness if so else return bin account
     return solution.count('1')
 
-
+def is_chromosome_valid():
+    # TODO: needs to be defined
+    return 0;
 
 def mutate(solution, mutation_rate):
     # change solution into a list
@@ -83,7 +87,7 @@ def genetic_algorithm(population_size, solution_length, mutation_rate, generatio
 
     return avg_fitness_history
 
-class Bin:
+class Problem:
     def __init__(self, name, num_item_weights, bin_capacity, items):
         self.name = name
         self.num_item_weights = num_item_weights
@@ -102,7 +106,7 @@ def parse_file(file_path):
         if line.startswith('\'BPP'):
             if current_problem:
                 problems.append(current_problem)
-            current_problem = Bin(name=line, num_item_weights=None, bin_capacity=None, items=[])
+            current_problem = Problem(name=line, num_item_weights=None, bin_capacity=None, items=[])
         elif current_problem and current_problem.num_item_weights is None:
             current_problem.num_item_weights = int(line)
         elif current_problem and current_problem.bin_capacity is None:
