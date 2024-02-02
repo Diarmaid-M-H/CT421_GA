@@ -3,20 +3,21 @@ import random
 import matplotlib.pyplot as plt
 
 
-def generate_random_solution(length):
-    # generates a string of length (length) randomly filled with 1s and 0s
-    return ''.join(random.choice('01') for _ in range(length))
+def generate_initial_solution(length):
+    # generates a list containing numbers 0 to length -1.
+    # For example: generate_initial_solution(5) returns [0] [1] [2] [3] [4]
+    if length <= 0:
+        raise Exception("Length must be greater than 0")
+
+    return list(range(length))
 
 
-def evaluate_fitness(solution):
+def evaluate_fitness(problem, solution):
     # Fitness of one chromosome which is a list
     # Function will need access to the current item list to know if chromosome has bins
     # TODO: needs to check if valid, assign bad fitness if so else return bin account
-    return solution.count('1')
 
-def is_chromosome_valid():
-    # TODO: needs to be defined
-    return 0;
+    return solution.count('1')
 
 def mutate(solution, mutation_rate):
     # change solution into a list
@@ -39,7 +40,7 @@ def crossover(parent1, parent2):
 
 def create_initial_population(population_size, solution_length):
     # creates <population_size> random solutions of length <solution_length>
-    return [generate_random_solution(solution_length) for _ in range(population_size)]
+    return [generate_initial_solution(solution_length) for _ in range(population_size)]
 
 
 def calculate_average_fitness(population):
@@ -57,8 +58,11 @@ def elitism(population, elitism_percentage):
     return elite
 
 
-def genetic_algorithm(population_size, solution_length, mutation_rate, generations, elite_percentage):
-    population = create_initial_population(population_size, solution_length)
+def genetic_algorithm(problem, mutation_rate, generations, elite_percentage, population_size):
+    
+    population = create_initial_population(population_size, problem.items.length)
+    problem = []
+    
     avg_fitness_history = []
 
     for generation in range(generations):
