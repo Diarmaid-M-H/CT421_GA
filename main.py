@@ -51,6 +51,7 @@ def evaluate_fitness(solution):
 def mutate(solution, mutation_rate):
     # change solution into a list
     # iterate through list, randomly swap 1 to 0 or 0 to 1
+    #TODO: make mutate into range of all bins (0 - item list length)
     mutated_solution = list(solution)
     for i in range(len(mutated_solution)):
         if random.random() < mutation_rate:
@@ -61,6 +62,7 @@ def mutate(solution, mutation_rate):
 def crossover(parent1, parent2):
     # chooses random int in the parent\
     # attaches "front" half of parent one to "back" half of parent 2, vice-versa
+    #TODO: this needs to be for lists instead of bitstrings
     crossover_point = random.randint(1, len(parent1) - 1)
     child1 = parent1[:crossover_point] + parent2[crossover_point:]
     child2 = parent2[:crossover_point] + parent1[crossover_point:]
@@ -105,6 +107,7 @@ def genetic_algorithm(mutation_rate, generations, elite_percentage, population_s
         elite = population[:elite_generation_size]
         new_population.extend(elite)
 
+        # TODO: everything below this change to be less exploitative
         for _ in range((population_size - len(elite) // 2)):
             parent1, parent2 = random.choices(population[:5], k=2)  # Select 2 parents from top 5 individuals
             # create 2 children by crossover from the 2 parents
