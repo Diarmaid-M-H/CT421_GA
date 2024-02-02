@@ -11,13 +11,42 @@ def generate_initial_solution(length):
 
     return list(range(length))
 
+def evaluate_fitness(solution):
+    itemlist = problem.items
+    """
+    Evaluate the fitness of a solution based on the given rules.
 
-def evaluate_fitness(problem, solution):
-    # Fitness of one chromosome which is a list
-    # Function will need access to the current item list to know if chromosome has bins
-    # TODO: needs to check if valid, assign bad fitness if so else return bin account
+    Parameters:
+    - solution (list): A list of integers representing a solution.
+    - problem (Problem): a problem instance containing relevant info like itemlist and bincapacity
 
-    return solution.count('1')
+    Returns:
+    - int: The fitness score 
+    """
+    # Step 1: Initialize a dictionary to store the sum of values for each distinct element in the solution.
+    distinct_values_sum = {}
+
+    # Step 2: Iterate over each index and value in the solution.
+    for index, value in enumerate(solution):
+        # Step 3: Check if the value is already in the dictionary.
+        if value not in distinct_values_sum:
+            # If not, add the value as a key with the corresponding itemlist value as the initial sum.
+            distinct_values_sum[value] = itemlist[index]
+        else:
+            # If the value is already in the dictionary, update the sum by adding the current itemlist value.
+            distinct_values_sum[value] += itemlist[index]
+
+    # Step 4: Initialize a variable to count the number of distinct values in the solution.
+    distinct_count = len(set(solution))
+
+    # Step 5: Iterate over the distinct values and check the sum of corresponding itemlist values.
+    for value in distinct_values_sum:
+        # If the sum is greater than bin capacity, return low fitness
+        if distinct_values_sum[value] > problem.bin_capacity:
+            return -1
+
+    # If not, return the number of distinct values in the solution.
+    return itemlist.length - distinct_count
 
 def mutate(solution, mutation_rate):
     # change solution into a list
@@ -58,10 +87,9 @@ def elitism(population, elitism_percentage):
     return elite
 
 
-def genetic_algorithm(problem, mutation_rate, generations, elite_percentage, population_size):
+def genetic_algorithm(mutation_rate, generations, elite_percentage, population_size):
     
     population = create_initial_population(population_size, problem.items.length)
-    problem = []
     
     avg_fitness_history = []
 
@@ -144,3 +172,6 @@ if __name__ == "__main__":
     # Example usage
     file_path = 'Binpacking.txt'
     problems = parse_file(file_path)
+    for problem in problems:
+        global problem
+
