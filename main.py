@@ -167,12 +167,17 @@ if __name__ == "__main__":
 
     file_path = 'Binpacking.txt'
     problems = parse_file(file_path)
+    # TODO: Change back to problem by problem
     #for problem in problems:
 
     global problem
     problem = problems[0]
 
     avg_fitness_history = genetic_algorithm(mutation_rate, generations, elite_percentage, population_size)
+
+    # Printing
+    print("Worst Bins: " + str(len(problem.items)))
+    print("Last Generation Average used Bins: " + str(len(problem.items) - avg_fitness_history[-1]))  # -1 accesses last index
 
     # Plotting
     plt.plot(avg_fitness_history)
