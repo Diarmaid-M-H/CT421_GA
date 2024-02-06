@@ -45,24 +45,26 @@ def evaluate_fitness(solution):
         if distinct_values_sum[value] > problem.bin_capacity:
             return -1
 
-    # If not, return the number of distinct values in the solution.
-    return itemlist.length - distinct_count
+    # Returns the max number of bins minus how many bins where used in this solution
+    # This means fitness gets greater the less bins there are
+    return len(itemlist) - distinct_count
 
 def mutate(solution, mutation_rate):
     # change solution into a list
     # iterate through list, randomly swap 1 to 0 or 0 to 1
-    #TODO: make mutate into range of all bins (0 - item list length)
-    mutated_solution = list(solution)
+    mutated_solution = solution
     for i in range(len(mutated_solution)):
         if random.random() < mutation_rate:
-            mutated_solution[i] = '1' if solution[i] == '0' else '0'
-    return ''.join(mutated_solution)
+            # this can assign to any of the bins first generated
+            # this may reduce in an empty bin being refilled (which could be optimal)
+            # this can also overfill a bin which is combed out by having bad fitness
+            mutated_solution[i] = random.randint(0, len(solution) - 1)
+    return mutated_solution
 
 
 def crossover(parent1, parent2):
     # chooses random int in the parent\
     # attaches "front" half of parent one to "back" half of parent 2, vice-versa
-    #TODO: this needs to be for lists instead of bitstrings
     crossover_point = random.randint(1, len(parent1) - 1)
     child1 = parent1[:crossover_point] + parent2[crossover_point:]
     child2 = parent2[:crossover_point] + parent1[crossover_point:]
@@ -91,7 +93,7 @@ def elitism(population, elitism_percentage):
 
 def genetic_algorithm(mutation_rate, generations, elite_percentage, population_size):
     
-    population = create_initial_population(population_size, problem.items.length)
+    population = create_initial_population(population_size, len(problem.items))
     
     avg_fitness_history = []
 
@@ -160,18 +162,21 @@ def parse_file(file_path):
 if __name__ == "__main__":
     population_size = 500
     mutation_rate = 0.01
-    generations = 20
+    generations = 100
     elite_percentage = 0.01
 
     file_path = 'Binpacking.txt'
     problems = parse_file(file_path)
-    for problem in problems:
-        global problem
-        avg_fitness_history = genetic_algorithm(population_size, mutation_rate, generations, elite_percentage)
+    #for problem in problems:
 
-        # Plotting
-        plt.plot(avg_fitness_history)
-        plt.xlabel("Generations")
-        plt.ylabel("Average Fitness")
-        plt.title("Genetic Algorithm: One-Max Problem")
-        plt.show()
+    global problem
+    problem = problems[0]
+
+    avg_fitness_history = genetic_algorithm(mutation_rate, generations, elite_percentage, population_size)
+
+    # Plotting
+    plt.plot(avg_fitness_history)
+    plt.xlabel("Generations")
+    plt.ylabel("Average Fitness")
+    plt.title("Genetic Algorithm: Bin Packing Problem")
+    plt.show()
