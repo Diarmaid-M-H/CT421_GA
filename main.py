@@ -100,7 +100,6 @@ def genetic_algorithm(mutation_rate, generations, elite_percentage, population_s
     for generation in range(generations):
         # sort the solutions by fitness, with the most fit solutions at the start of the list
         population.sort(key=evaluate_fitness, reverse=True)
-
         avg_fitness = calculate_average_fitness(population)
         avg_fitness_history.append(avg_fitness)
 
@@ -111,7 +110,7 @@ def genetic_algorithm(mutation_rate, generations, elite_percentage, population_s
 
         # TODO: everything below this change to be less exploitative
         for _ in range((population_size - len(elite) // 2)):
-            parent1, parent2 = random.choices(population[:5], k=2)  # Select 2 parents from top 5 individuals
+            parent1, parent2 = random.choices(population[:population_size//2], k=2)  # Select 2 parents from top 5 individuals
             # create 2 children by crossover from the 2 parents
             child1, child2 = crossover(parent1, parent2)
             # mutate the children
@@ -162,7 +161,7 @@ def parse_file(file_path):
 if __name__ == "__main__":
     population_size = 500
     mutation_rate = 0.01
-    generations = 100
+    generations = 300
     elite_percentage = 0.01
 
     file_path = 'Binpacking.txt'
