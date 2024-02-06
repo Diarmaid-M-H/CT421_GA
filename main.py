@@ -184,5 +184,5 @@ if __name__ == "__main__":
         plt.plot(avg_fitness_history)
         plt.xlabel("Generations")
         plt.ylabel("Average Fitness")
-        plt.title("Genetic Algorithm: Bin Packing Problem")
+        plt.title("Genetic Algorithm: Bin Packing Problem " + str(counter))
         plt.show()
