@@ -100,8 +100,9 @@ def genetic_algorithm(mutation_rate, generations, elite_percentage, population_s
     for generation in range(generations):
         # sort the solutions by fitness, with the most fit solutions at the start of the list
         population.sort(key=evaluate_fitness, reverse=True)
-        print("Least Bins Used Generation " + str(generation) + ": " + str(len(set(population[0]))) +
-              ", Fitness: " + str(evaluate_fitness(population[0])))
+        if (generation % 50) == 0:
+            print("Least Bins Used Generation " + str(generation) + ": " + str(len(set(population[0]))) +
+                  ", Fitness: " + str(evaluate_fitness(population[0])))
 
         avg_fitness = calculate_average_fitness(population)
         avg_fitness_history.append(avg_fitness)
@@ -163,26 +164,26 @@ def parse_file(file_path):
 if __name__ == "__main__":
     population_size = 500
     mutation_rate = 0.01
-    generations = 300
+    generations = 201
     elite_percentage = 0.01
 
     file_path = 'Binpacking.txt'
     problems = parse_file(file_path)
     # TODO: Change back to problem by problem
-    #for problem in problems:
-
     global problem
-    problem = problems[0]
+    counter = 0
+    for problem in problems:
+        counter += 1
+        print("\n*** Problem " + str(counter) + " ***")
+        avg_fitness_history = genetic_algorithm(mutation_rate, generations, elite_percentage, population_size)
 
-    avg_fitness_history = genetic_algorithm(mutation_rate, generations, elite_percentage, population_size)
+        # Printing
+        print("Worst Bins (1 item per bin): " + str(len(problem.items)))
+        print("Last Generation Average Fitness: " + str(avg_fitness_history[-1]))  # -1 accesses last index
 
-    # Printing
-    print("Worst Bins (1 item per bin): " + str(len(problem.items)))
-    print("Last Generation Average Fitness: " + str(avg_fitness_history[-1]))  # -1 accesses last index
-
-    # Plotting
-    plt.plot(avg_fitness_history)
-    plt.xlabel("Generations")
-    plt.ylabel("Average Fitness")
-    plt.title("Genetic Algorithm: Bin Packing Problem")
-    plt.show()
+        # Plotting
+        plt.plot(avg_fitness_history)
+        plt.xlabel("Generations")
+        plt.ylabel("Average Fitness")
+        plt.title("Genetic Algorithm: Bin Packing Problem")
+        plt.show()
