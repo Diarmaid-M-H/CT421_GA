@@ -13,16 +13,6 @@ def generate_initial_solution(length):
 
 def evaluate_fitness(solution):
     itemlist = problem.items
-    """
-    Evaluate the fitness of a solution based on the given rules.
-
-    Parameters:
-    - solution (list): A list of integers representing a solution.
-    - problem (Problem): a problem instance containing relevant info like itemlist and bincapacity
-
-    Returns:
-    - int: The fitness score 
-    """
     # Step 1: Initialize a dictionary to store the sum of values for each distinct element in the solution.
     distinct_values_sum = {}
 
@@ -112,7 +102,6 @@ def genetic_algorithm(mutation_rate, generations, elite_percentage, population_s
         elite = population[:elite_generation_size]
         new_population.extend(elite)
 
-        # TODO: everything below this change to be less exploitative
         for _ in range(((population_size - len(elite)) // 2)):
             parent1, parent2 = random.choices(population[:population_size//2], k=2)  # Select 2 parents from top 5 individuals
             # create 2 children by crossover from the 2 parents
@@ -141,18 +130,23 @@ def parse_file(file_path):
     current_problem = None
     for line in lines:
         line = line.strip()
+        # Special case for the start of each problem that assigns name and no. of items
         if line.startswith('\'BPP'):
             if current_problem:
                 problems.append(current_problem)
             current_problem = Problem(name=line, num_item_weights=None, bin_capacity=None, items=[])
         elif current_problem and current_problem.num_item_weights is None:
+            # For parsing the line that contains no. of item weights
             current_problem.num_item_weights = int(line)
         elif current_problem and current_problem.bin_capacity is None:
+            # For parsing the line that gives problem's bin capacity
             current_problem.bin_capacity = int(line)
         elif current_problem:
+            # Parses the rest of the lines into a list of items
             parts = line.split()
             item = int(parts[0])
             count = int(parts[1])
+            # "Flattens" Items into multiple entries if they have count higher than 1
             current_problem.items.extend([item] * count)
 
     if current_problem:
