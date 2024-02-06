@@ -100,6 +100,9 @@ def genetic_algorithm(mutation_rate, generations, elite_percentage, population_s
     for generation in range(generations):
         # sort the solutions by fitness, with the most fit solutions at the start of the list
         population.sort(key=evaluate_fitness, reverse=True)
+        print("Least Bins Used Generation " + str(generation) + ": " + str(len(set(population[0]))) +
+              ", Fitness: " + str(evaluate_fitness(population[0])))
+
         avg_fitness = calculate_average_fitness(population)
         avg_fitness_history.append(avg_fitness)
 
@@ -120,7 +123,6 @@ def genetic_algorithm(mutation_rate, generations, elite_percentage, population_s
             new_population.extend([child1, child2])
 
         population = new_population
-
     return avg_fitness_history
 
 class Problem:
@@ -175,8 +177,8 @@ if __name__ == "__main__":
     avg_fitness_history = genetic_algorithm(mutation_rate, generations, elite_percentage, population_size)
 
     # Printing
-    print("Worst Bins: " + str(len(problem.items)))
-    print("Last Generation Average used Bins: " + str(len(problem.items) - avg_fitness_history[-1]))  # -1 accesses last index
+    print("Worst Bins (1 item per bin): " + str(len(problem.items)))
+    print("Last Generation Average Fitness: " + str(avg_fitness_history[-1]))  # -1 accesses last index
 
     # Plotting
     plt.plot(avg_fitness_history)
